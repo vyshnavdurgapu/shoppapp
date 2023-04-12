@@ -39,9 +39,13 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             icon: Icon(Icons.more_vert),
             itemBuilder: (_) => [
               PopupMenuItem(
-                  child: Text('Only Favourites'),
-                  value: FilterOptions.Favourites),
-              PopupMenuItem(child: Text('Show All'), value: FilterOptions.ALL),
+                child: Text('Only Favourites'),
+                value: FilterOptions.Favourites,
+              ),
+              PopupMenuItem(
+                child: Text('Show All'),
+                value: FilterOptions.ALL,
+              ),
             ],
           ),
           Consumer<Cart>(
