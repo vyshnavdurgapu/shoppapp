@@ -35,10 +35,10 @@ class _EditproductScreenState extends State<EditproductScreen> {
 
   void didChangeDependencies() {
     if (init) {
-      final productid = ModalRoute.of(context)!.settings.arguments as String;
+      final productid = ModalRoute.of(context)!.settings.arguments;
       if (productid != null) {
-        _edittedproduct =
-            Provider.of<Products>(context, listen: false).findbyid(productid);
+        _edittedproduct = Provider.of<Products>(context, listen: false)
+            .findbyid(productid as String);
         initvalues = {
           'title': _edittedproduct.title,
           'description': _edittedproduct.description,
@@ -82,9 +82,10 @@ class _EditproductScreenState extends State<EditproductScreen> {
       if (_edittedproduct.id != '') {
         Provider.of<Products>(context, listen: false)
             .updateproduct(_edittedproduct.id, _edittedproduct);
-      } else
+      } else {
         Provider.of<Products>(context, listen: false)
             .addproduct(_edittedproduct);
+      }
       Navigator.of(context).pop();
     }
   }
