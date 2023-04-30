@@ -23,7 +23,9 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
-  void addorder(List<CartItem> cartproducts, double total) {
+  Future<void> addorder(List<CartItem> cartproducts, double total) async {
+    final url = Uri.parse(
+        'https://shopappflutter-26cdc-default-rtdb.firebaseio.com/products.json');
     _orders.insert(
         0,
         OrderItem(

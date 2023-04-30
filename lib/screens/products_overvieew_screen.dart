@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:shoppapp/providers/products_provider.dart';
 import 'package:shoppapp/screens/cart_screen.dart';
@@ -18,6 +20,40 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var showonlyfavourites = false;
+  var isinit = true;
+  var isloading = false;
+
+  @override
+  void initState() {
+    // Provider.of<Products>(context).fetchandsetproducts(); wont work
+    // Future.delayed(Duration.zero).then((value) {
+    //   Provider.of<Products>(context).fetchandsetproducts();
+    // }); this can work its like a hack but its not uh that meh
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (isinit) {
+      setState(() {
+        isloading = true;
+      });
+      Provider.of<Products>(context).fetchandsetproducts().then((_) {
+        setState(() {
+          log('done');
+          isloading = false;
+        });
+      }).catchError((error) {
+        setState(() {
+          log('done');
+          isloading = false;
+        });
+      });
+    }
+    isinit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     Provider.of<Cart>(context);
@@ -62,7 +98,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           )
         ],
       ),
-      body: productsgrid(showonlyfavourites),
+      body: isloading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : productsgrid(showonlyfavourites),
     );
   }
 }
