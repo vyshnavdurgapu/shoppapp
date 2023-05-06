@@ -63,7 +63,6 @@ class Products with ChangeNotifier {
     log('the function has been called');
     final url = Uri.parse(
         'https://shopappflutter-26cdc-default-rtdb.firebaseio.com/products.json');
-
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -132,6 +131,9 @@ class Products with ChangeNotifier {
     try {
       final response = await http.get(url);
       final extracteddata = json.decode(response.body) as Map<String, dynamic>;
+      if (extracteddata == null) {
+        return Future.value();
+      }
       final List<Product> loadedproducts = [];
       extracteddata.forEach((key, value) {
         loadedproducts.add(Product(

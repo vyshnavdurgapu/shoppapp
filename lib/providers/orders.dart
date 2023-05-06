@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 import 'cart.dart';
 
 class OrderItem {
@@ -23,16 +24,54 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
+  Future<void> fetchandset() async {
+    final url = Uri.parse(
+        'https://shopappflutter-26cdc-default-rtdb.firebaseio.com/orders.json');
+    final response = await http.get(url);
+    final List<OrderItem> loadedOrders = [];
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    if (extractedData == null) {
+      return;
+    }
+    extractedData.forEach((orderid, orderdata) {
+      loadedOrders.add(OrderItem(
+        id: orderid,
+        amount: orderdata['amount'],
+        datetime: DateTime.parse(orderdata['datetime']),
+        products: (orderdata['products'] as List<dynamic>)
+            .map(
+                (e) => CartItem(e['id'], e['title'], e['quantity'], e['price']))
+            .toList(),
+      ));
+    });
+    _orders = loadedOrders.reversed.toList();
+    notifyListeners();
+  }
+
   Future<void> addorder(List<CartItem> cartproducts, double total) async {
     final url = Uri.parse(
-        'https://shopappflutter-26cdc-default-rtdb.firebaseio.com/products.json');
+        'https://shopappflutter-26cdc-default-rtdb.firebaseio.com/orders.json');
+    final timestamp = DateTime.now();
+    final response = await http.post(url,
+        body: json.encode({
+          'amount': total,
+          'datetime': timestamp.toIso8601String(),
+          'products': cartproducts.map((e) {
+            return {
+              'id': e.id,
+              'title': e.title,
+              'quantity': e.quantity,
+              'price': e.price
+            };
+          }).toList()
+        }));
     _orders.insert(
         0,
         OrderItem(
-            id: DateTime.now().toString(),
+            id: json.decode(response.body)['name'],
             amount: total,
             products: cartproducts,
-            datetime: DateTime.now()));
+            datetime: timestamp));
     notifyListeners();
   }
 }

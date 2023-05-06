@@ -11,6 +11,7 @@ import './screens/products_overvieew_screen.dart';
 import './providers/products_provider.dart';
 import 'package:provider/provider.dart';
 import './screens/user_products_screen.dart';
+import './screens/auth_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,13 +41,14 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.cyan,
             accentColor: Colors.redAccent,
             fontFamily: 'Lato'),
-        home: ProductsOverviewScreen(),
+        home: AuthScreen(),
         routes: {
           productDetailScreen.routename: (ctx) => productDetailScreen(),
           CartScreen.routename: (ctx) => CartScreen(),
           OrderScreen.routename: (ctx) => OrderScreen(),
           userproductscreen.routename: (ctx) => userproductscreen(),
           EditproductScreen.routename: (ctx) => EditproductScreen(),
+          AuthScreen.routeName: (ctx) => AuthScreen(),
         },
       ),
     );
