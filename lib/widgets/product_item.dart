@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:shoppapp/providers/auth.dart';
 import 'package:shoppapp/providers/cart.dart';
 import '../screens/product_detail_screen.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // print('product item card built');
+    final authdata = Provider.of<Auth>(context, listen: false);
     final product = Provider.of<Product>(context);
     final cart = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
@@ -41,7 +43,7 @@ class ProductItem extends StatelessWidget {
           leading: Consumer<Product>(
             builder: (ctx, product, child) => IconButton(
               onPressed: () {
-                product.togglefavoritestatus();
+                product.togglefavoritestatus(authdata.token, authdata.userid);
               },
               icon: Icon(
                 product.isFavorite ? Icons.favorite : Icons.favorite_border,
